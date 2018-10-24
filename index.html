@@ -49,7 +49,8 @@
 	<link rel="stylesheet" href="css/custom.css">	
 	</head>
 	<body>
-		<div class="reveal">
+
+	<div class="reveal">
 <div class="slides">
 <section><section>
 <div class="cell border-box-sizing text_cell rendered">
@@ -68,7 +69,7 @@
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>© Olaf Wied 2018</p>
-<h2 id="Scalable-Methods-for-Bayesian-Machine-Learning-and-Probabilistic-Inference">Scalable Methods for Bayesian Machine Learning and Probabilistic Inference<a class="anchor-link" href="#Scalable-Methods-for-Bayesian-Machine-Learning-and-Probabilistic-Inference">&#182;</a></h2><h1 id="Outline">Outline<a class="anchor-link" href="#Outline">&#182;</a></h1><h3 id="Part-I---Short-Recap-of-Bayesian-Basics">Part I - Short Recap of Bayesian Basics<a class="anchor-link" href="#Part-I---Short-Recap-of-Bayesian-Basics">&#182;</a></h3><ul>
+<h2 id="Scalable-Methods-for-Bayesian-Machine-Learning-and-Probabilistic-Inference">Scalable Methods for Bayesian Machine Learning and Probabilistic Inference<a class="anchor-link" href="#Scalable-Methods-for-Bayesian-Machine-Learning-and-Probabilistic-Inference">&#182;</a></h2><h1 id="Outline">Outline<a class="anchor-link" href="#Outline">&#182;</a></h1><h3 id="Part-I---Short-Recap-of-Bayesian-Basics"><a href="#/2">Part I - Short Recap of Bayesian Basics</a><a class="anchor-link" href="#Part-I---Short-Recap-of-Bayesian-Basics">&#182;</a></h3><ul>
 <li>Bayes Theorem</li>
 <li>Bayesian Inference</li>
 <li>Generative vs Discriminative Models</li>
@@ -86,7 +87,15 @@
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>© Olaf Wied 2018</p>
-<h3 id="Part-II---Latent-Variable-Models-and-the-EM-Algorithm">Part II - Latent Variable Models and the EM Algorithm<a class="anchor-link" href="#Part-II---Latent-Variable-Models-and-the-EM-Algorithm">&#182;</a></h3>
+<h3 id="Part-II---Latent-Variable-Models-and-the-EM-Algorithm"><a href="#/11">Part II - Latent Variable Models and the EM Algorithm</a><a class="anchor-link" href="#Part-II---Latent-Variable-Models-and-the-EM-Algorithm">&#182;</a></h3><ul>
+<li>Kullback-Leibler Divergence</li>
+<li>Latent Variable Models</li>
+<li>Example: Mixture Models</li>
+<li>EM Algorithm, E-Step and M-Step</li>
+<li>Large Scale EM</li>
+<li>Variational and Stochastic Variational Inference</li>
+</ul>
+
 </div>
 </div>
 </div></section><section>
@@ -182,20 +191,17 @@ $$Posterior = \frac{Likelihood \cdot Prior}{Evidence}$$
 $$p(\theta|X) = \frac{\prod_{i=1}^n p(x_i|\theta)p(\theta)}{\int \prod_{i=1}^n p(x_i|\theta)p(\theta) d\theta}$$
 </div>
 </div>
-</div></section><section>
+</div><div class="fragment">
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>© Olaf Wied 2018</p>
-<p>Part I - Recap of Bayesian ML</p>
-<h1 id="The-Inference-Problem">The Inference Problem<a class="anchor-link" href="#The-Inference-Problem">&#182;</a></h1><h4 id="Bayesian-Inference">Bayesian Inference<a class="anchor-link" href="#Bayesian-Inference">&#182;</a></h4>$$p(\theta|X) = \frac{\prod_{i=1}^n p(x_i|\theta)p(\theta)}{\int \prod_{i=1}^n p(x_i|\theta)p(\theta) d\theta}$$<p>Bayesian Inference provides a full <em>posterior</em> distribution over $\theta$. <strong>Computing the mode is called "Poor Man's Bayes" and gives the MAP (Maximum A Posteriori) estimate.</strong></p>
-<p>Note that the evidence does not depend on $\theta$ and therefore is irrelevant for computing the MAP estimate: $$\theta_{MAP} = \arg \max p(x|\theta)p(\theta) = \arg \max \{\log p(x|\theta) + \log p(\theta) \}$$</p>
+<p>Bayesian Inference provides a full <em>posterior</em> distribution over $\theta$. <strong>Computing the mode is called "Poor Man's Bayes" and gives the MAP (Maximum A Posteriori) estimate.</strong></p>
 
 </div>
 </div>
-</div></section><section>
+</div></div></section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -204,12 +210,21 @@ $$p(\theta|X) = \frac{\prod_{i=1}^n p(x_i|\theta)p(\theta)}{\int \prod_{i=1}^n p
 <p>© Olaf Wied 2018</p>
 <p>Part I - Recap of Bayesian ML</p>
 <h1 id="The-Inference-Problem">The Inference Problem<a class="anchor-link" href="#The-Inference-Problem">&#182;</a></h1><h4 id="Bayesian-Inference">Bayesian Inference<a class="anchor-link" href="#Bayesian-Inference">&#182;</a></h4><p>Note that the evidence does not depend on $\theta$ and therefore is irrelevant for computing the MAP estimate: $$\theta_{MAP} = \arg \max p(x|\theta)p(\theta) = \arg \max \{\log p(x|\theta) + \log p(\theta) \}$$</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Note further that, while the likelihood depends exponentially on $n$, the prior remains constant. Hence, eventually, the data will <em>overwhelm the prior</em> and the MAP will converge towards the MLE.</strong> Likewise, the posterior will become peaked around the MAP estimate.</p>
 <p>It is often the case, that when $n$ grows, frequentist and Bayesian perspective will yield the same result! They do not contradict each other. You should have both tools in your toolbox.</p>
 
 </div>
 </div>
-</div></section></section><section><section>
+</div></div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -464,6 +479,7 @@ $$p(y_{test}|x_{test},X_{tr},Y_{tr}) = \int p(y_{test}|x_{test},\theta)p(\theta|
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">beta</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
        <span class="s1">&#39;y-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;beta a=3 b=1&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -652,10 +668,212 @@ $$p(\theta) = \frac{1}{2} \cdot Beta(\theta|10,10) + \frac{1}{2} \cdot Beta(\the
 
 </div>
 </div>
-</div></section></section>
+</div></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>© Olaf Wied 2018</p>
+<h1 id="Part-II---Latent-Variable-Models-and-the-EM-Algorithm">Part II - Latent Variable Models and the EM Algorithm<a class="anchor-link" href="#Part-II---Latent-Variable-Models-and-the-EM-Algorithm">&#182;</a></h1>
+</div>
+</div>
+</div></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>© Olaf Wied 2018</p>
+<p>Part II - Latent Variable Models and the EM Algorithm</p>
+<h1 id="Kullback-Leibler-Divergence">Kullback-Leibler Divergence<a class="anchor-link" href="#Kullback-Leibler-Divergence">&#182;</a></h1><h4 id="Motivation">Motivation<a class="anchor-link" href="#Motivation">&#182;</a></h4><p>In Part I, it was mentioned that we often want to find computationally more efficient approximation to distributions like the posterior. Therefore, we need a measure of dissimilarity between two distributions. This is what the <strong>Kullback-Leibler (KL) divergence</strong> provides. Before we recap the definition and essential properties, we give a brief review of the concept of <strong>entropy</strong>, which is closely related to the KL divergence.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Notation</strong>: We will denote the entropy of a random variable $X$ as $\mathbb{H}(X)$ and the KL divergence by $\mathbb{KL}(p||q)$ for two distributions $p$ and $q$.</p>
+
+</div>
+</div>
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>© Olaf Wied 2018</p>
+<p>Part II - Latent Variable Models and the EM Algorithm</p>
+<h4 id="Entropy">Entropy<a class="anchor-link" href="#Entropy">&#182;</a></h4><p>The entropy of a random variable $X$ with distribution $p$ is an uncertainty measure:</p>
+$$\mathbb{H}(X) \mathrel{\vcenter{:=}} -\mathbb{E}\log(p)$$<p>For a discrete variable this would be</p>
+$$\mathbb{H}(X) = - \sum_{n=1}^N p(X=n) \log\left(p(X=n)\right)$$<p>The most common choice for the base of the logarithm is 2. It is then said that the entropy is measured in <strong>bits</strong>.</p>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>© Olaf Wied 2018</p>
+<p>Part II - Latent Variable Models and the EM Algorithm</p>
+<h4 id="Entropy">Entropy<a class="anchor-link" href="#Entropy">&#182;</a></h4><p>The uniform distribution has maximum entropy (because every value is equally likely, which leads to maximum uncertainty). A discrete distribution with $p(X=d)=1$ has minimum entropy because there is no uncertainty about its distribution!</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next we will further illustrate this idea by looking at the <strong>binary entropy function</strong> for a binary variable $X$ that can take two values $0$ and $1$ with $p(X=1)=\theta = 1-p(X=0)$.</p>
+$$\mathbb{H}(X) = -\sum_{n=0}^1 p(X=n)\log(p(X=n)) = -\theta\log\theta-(1-\theta)\log(1-\theta)$$<p>For which $\theta$ do we achieve maximum and minimum entropy?</p>
+
+</div>
+</div>
+</div></div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">binary_cross_entropy</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">theta</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">theta</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">theta</span><span class="p">)</span>
+
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">2</span><span class="o">**-</span><span class="mi">15</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">binary_cross_entropy</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$P(X=1) = \theta$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Entropy of Bernoulli Variable&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+</div>
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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4GPbd9012nhE8lmDBqVJ/W9/g8+SOxYKk4WICvAUFRWF4uLiSPZd6x56yCfhaN7cZ3Fv3DjqiETy3wknwNixcOqp8OijUUdTa8xsZgihqLL1dIVqun3zTell0TffrMQukim33eat+Mceg7feijqayCm5p9uNN8Lnn8P++3sLQkQyo21b738HHxpZ4GWBldzT6ZNPfFw7eB+grkQVyawrr/S6TW+8Ac8+G3U0kVJyT6err/ahWKedBkWVdomJSLptvbWfVAX4058Kemikknu6zJrlfX3168MNN0QdjUjh6t8ffvELWLgQhg2LOprIKLmnQwhw+eW+PHgw7LxztPGIFLJ69XwwA/gV4itWRBtPRJTc0+Gll3wSjm23hT//OepoROTYY+Gww3wehQL9Jq3kXlMbN3q1R/DCYNtuG208IuKDGeKznQ0dCkuWVLx+HlJyr6mHH/aqjzvv7LOyi0h26NoV+vTxyTziBfwKiJJ7TaxZA9dc48s33OA1pkUke/ztb1C3Ljz4IHzwQdTRZJSSe02MGAFLl8Iee8App0QdjYgka9/eS4Fs3AjXXht1NBml5F5d33/vM8AAXH+9T9wrItnnmmt8iPKYMfD221FHkzHKSNV1992wfDn88pfQO3nWQRHJGq1awcCBvnz11dHGkkFK7tWxejX83//58vXXq8yASLb785+hUSOYMMEnrC8ASu7VMWQIfPUVHHCAZlgSyQXNmsHFF/tygbTeldyrasUKuPVWX77hBrXaRXLFpZd67ZkpU+D116OOptYpuVfVbbfBqlV+9dthh0UdjYikauut4cILffn666ONJQOU3Kti5crS6bwK4I9DJO9ceKFPoPPKKzBtWtTR1Col96oYOtRnWjrsMDjwwKijEZGq2m47uOACX87zBpqSe6q+/RZuv92Xr7oq2lhEpPouvhi23BJefBFmzIg6mlqj5J6q4cN9hEy3bnD44VFHIyLV1bRpaR2oPG69K7mnYs2a0hEyV12lETIiue7SS2HzzeH552H27KijqRVK7ql48EFYtgz23BOOOSbqaESkprbfHs47z5fztN67kntl1q+Hm27yZbXaRfLHZZd5zZlnn83LipFK7pUZNQoWLfI5GX/zm6ijEZF0ad4czjjDp8mMT+yRR5TcK7JpU2mr/YorvC60iOSPyy7zb+MjR3ohwDyi5F6Rl16C+fOh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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>© Olaf Wied 2018</p>
+<p>Part II - Latent Variable Models and the EM Algorithm</p>
+<h4 id="Entropy">Entropy<a class="anchor-link" href="#Entropy">&#182;</a></h4><p>This makes intuitive sense. If the probability of heads or tails is 1, there is no uncertainty about the result of the next coin flip. The uncertainty is maximal when both outcomes are equally likely for $\theta = 0.5$.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>© Olaf Wied 2018</p>
+<p>Part II - Latent Variable Models and the EM Algorithm</p>
+<h4 id="Entropy">Entropy<a class="anchor-link" href="#Entropy">&#182;</a></h4><p>From an information theory background, $\log_2$ is a natural choice. We saw above that a fair coin toss has an entropy of 1. Similarly, $n$ (fair) coin tosses have an entropy of $n$ bits. Note that rare events have lower entropy because they are less "surprising" and carry less information.</p>
+
+</div>
+</div>
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>© Olaf Wied 2018</p>
+<p>Part II - Latent Variable Models and the EM Algorithm</p>
+<h4 id="KL-divergence">KL divergence<a class="anchor-link" href="#KL-divergence">&#182;</a></h4>$$\mathbb{KL}(q||p) \mathrel{\vcenter{:=}} \mathbb{E}_q \log\frac{q(x)}{p(x)} = \int{q(x)\log\frac{q(x)}{p(x)} dx} \, \text{ or (in the discrete case) } \, \sum_{n=1}^N q(x_n) \log\frac{q(x_n)}{p(x_n)} $$<p>Note that the KL divergence is <strong>not symmetric</strong> and $q$ and $p$ have to be <strong>defined over the same domain</strong>!</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If we define the <strong>cross-entropy</strong> as $\mathbb{H}(q,p) \mathrel{\vcenter{:=}} - \mathbb{E}_q \log p(x)$ we can decompose the KL divergence into two parts:</p>
+$$\mathbb{KL}(q||p) \mathrel{\vcenter{:=}} \mathbb{E}_q \log\frac{q(x)}{p(x)} = \mathbb{E}_q \log q(x) - \mathbb{E}_q \log p(x)= -\mathbb{H}(q) + \mathbb{H}(q,p)$$
+</div>
+</div>
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>© Olaf Wied 2018</p>
+<p>Part II - Latent Variable Models and the EM Algorithm</p>
+<h4 id="KL-divergence">KL divergence<a class="anchor-link" href="#KL-divergence">&#182;</a></h4><p>We can <strong>interpret</strong> this difference between cross-entropy and entropy <strong>as the number of extra bits</strong> needed to describe the data coming from distribution $q$ when we use $p$ instead of the true distribution $q$.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Applying <strong>Jensen's inequality</strong> to the logarithm, one can easily show that <strong>the KL divergence is non-negative</strong>. (This should make sense if we keep in mind the <em>extra</em> bit interpretation.)</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now, remembering our goal of approximating one distribution with another, what would be the <strong>effect of minimizing the KL divergence with respect to $q$</strong>?</p>
+<p>From the definition $\int{q(x)\log\frac{q(x)}{p(x)} dx}$ we can see that the approximation needs to be particularly good where $q(x)$ has large values!</p>
+
+</div>
+</div>
+</div></div></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>© Olaf Wied 2018</p>
+<p>Part II - Latent Variable Models and the EM Algorithm</p>
+<h1 id="Latent-Variable-Models">Latent Variable Models<a class="anchor-link" href="#Latent-Variable-Models">&#182;</a></h1>
+</div>
+</div>
+</div></section></section>
+</div>
+</div>
+		
 		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.js"></script>
 
